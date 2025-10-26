@@ -7,16 +7,23 @@ trigger:
 - master
 
 pool:
-  name: Default
   vmImage: ubuntu-latest
 
 steps:
-- task: NodeTool@0
+# Clean checkout
+- checkout: self
+  clean: true
+
+# Install Node.js 20
+- task: UseNode@1
   inputs:
     versionSpec: '20.x'
   displayName: 'Install Node.js'
 
+# Install and build (if project is in subfolder, add cd web)
 - script: |
+    rm -rf node_modules
     npm install
     npm run build
   displayName: 'npm install and build'
+
